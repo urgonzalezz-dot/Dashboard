@@ -12,7 +12,7 @@ Cada dependencia recibe un **Risk Score** (0-110 puntos) basado en 4 criterios p
 
 | Criterio        | Peso Máximo | Descripción                                                 |
 | --------------- | ----------- | ----------------------------------------------------------- |
-| **Security**    | 0-40 pts    | Vulnerabilidades conocidas (MVP: 0, se integrará en Fase 3) |
+| **Security**    | 0-40 pts    | Vulnerabilidades conocidas ( se integrará ) |
 | **Version Gap** | 0-25 pts    | Distancia entre versión actual y latest                     |
 | **Deprecated**  | 0-20 pts    | Paquete marcado como obsoleto por el autor                  |
 | **Maintenance** | 0-3 pts     | Tiempo sin publicaciones (>24 meses)                        |
