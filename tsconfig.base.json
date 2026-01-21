@@ -20,7 +20,9 @@
       "dependencies/Module": ["dependencies/src/remote-entry.js"],
       "gcp/Module": ["gcp/src/remote-entry.js"],
       "@libs/hooks": ["libs/hooks/src/index.js"],
-      "@libs/ui": ["libs/ui/src/index.js"]
+      "@libs/ui": ["libs/ui/src/index.js"],
+      "@libs/utilities": ["libs/utilities/src/index.js"],
+      "@libs/redux": ["libs/redux/src/index.js"]
     }
   },
   "exclude": ["node_modules", "tmp"]

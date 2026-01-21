@@ -1,0 +1,13 @@
+.dependenciesPage {
+  /* Ancho relativo al contenedor padre del host */
+  width: 100%;
+
+  /* No definir altura fija - dejar que el contenido determine la altura */
+  min-height: 0;
+
+  box-sizing: border-box;
+
+  /* Asegurar que no desborde */
+  max-width: 100%;
+  overflow-x: hidden;
+}
