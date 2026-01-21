@@ -1,10 +1,26 @@
+/**
+ * @fileoverview Layout principal del Host
+ */
+
 import * as React from 'react';
+import { memo, forwardRef, useRef, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Header, Icons, SideMenu } from '@lp_front_account/lp-kit-dashboards';
+import { SideMenu } from '@lp_front_account/lp-kit-dashboards';
 import { HostContextProvider } from '@libs/ui';
-import { useState, memo, forwardRef } from 'react';
+
+// Redux hooks individuales
+import {
+  useSelectedRepoId,
+  useSelectedRepo,
+  useSelectedRepoConfig,
+  useReposList,
+} from '@libs/redux';
+
+// Components
+import HeaderComponent from '../../components/Header/Header';
+
+// Styles
 import styles from './_Layout.module.scss';
-import headerStyles from './HeaderWrapper.module.scss';
 
 // Icons MUI
 import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined';
@@ -12,6 +28,7 @@ import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined';
 import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 
+// Memoized Icons
 const DashboardIcon = memo(
   forwardRef((props, ref) => (
     <SpaceDashboardOutlinedIcon ref={ref} {...props} />
@@ -34,17 +51,20 @@ const DependenciesIcon = memo(
 );
 DependenciesIcon.displayName = 'DependenciesIcon';
 
+// Usuario mock
+const userMock = { name: 'Jane Doe', email: 'admin@liverpool.com' };
+
 export default function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const userMock = { name: 'Jane Doe', email: 'admin@liverpool.com' };
-  const storesMock = [
-    { id: 1, name: 'México, CDMX' },
-    { id: 2, name: 'Guadalajara, JAL' },
-  ];
-  const [selectedStore, setSelectedStore] = useState(storesMock[0]);
+  // Hooks individuales de Redux
+  const selectedRepoId = useSelectedRepoId();
+  const selectedRepo = useSelectedRepo();
+  const selectedRepoConfig = useSelectedRepoConfig();
+  const repos = useReposList();
 
+  // Menú de navegación
   const dataMenu = [
     {
       name: 'Inicio',
@@ -78,7 +98,11 @@ export default function Layout() {
 
   const handleGoTo = (url) => navigate(url);
 
-  // Contexto que se comparte con todos los MFEs
+  /**
+   * Contexto que se comparte con todos los MFEs
+   * Los MFEs pueden acceder al repo seleccionado aquí
+   * o directamente desde Redux usando useSelector
+   */
   const hostContextValue = {
     layout: {
       headerHeight: '4rem',
@@ -88,76 +112,71 @@ export default function Layout() {
     user: userMock,
     isAuthenticated: true,
     navigate: handleGoTo,
+    // Repos (antes stores) - ahora derivado de Redux
+    repos: {
+      available: repos,
+      selected: selectedRepo,
+      selectedId: selectedRepoId,
+      config: selectedRepoConfig,
+    },
+    // Alias para compatibilidad con código antiguo
     stores: {
-      available: storesMock,
-      selected: selectedStore,
-      setSelected: setSelectedStore,
+      available: repos,
+      selected: selectedRepo,
     },
     notifications: {
       show: (message) => {
         console.log('Notification:', message);
-        // sistema de notificaciones
       },
     },
   };
 
+  // Variable que nos ayuda a ir al MFE principal cuando hacemos cambio de selección de repo
+
+  const prevRepoIdRef = useRef(null);
+  const [sideMenuKey, setSideMenuKey] = useState(0);
+
+  useEffect(() => {
+    // Si no tenemos un repo selecciondo simplemente retornamos (aunque siembre habrá uno)
+    if (!selectedRepoId) return;
+
+    // Evitar navegación en el primer render
+    /*   if (prevRepoIdRef.current === null) {
+      prevRepoIdRef.current = selectedRepoId;
+      return;
+    } */
+
+    const repoChanged = prevRepoIdRef.current !== selectedRepoId;
+    if (!repoChanged) return;
+
+    prevRepoIdRef.current = selectedRepoId;
+
+    if (location.pathname !== '/dashboard') {
+      handleGoTo('/dashboard');
+    }
+    setSideMenuKey((k) => k + 1);
+  }, [selectedRepoId, location.pathname, handleGoTo]);
+
   return (
     <HostContextProvider value={hostContextValue}>
       <div className={styles.shell}>
-        {/* Header - debe estar POR ENCIMA del Drawer (z-index: 1301) */}
-        <div className={`${styles.header} ${headerStyles.headerWrapper}`}>
-          <Header
-            title="Dashboard de monitoreo"
-            headerLogo={
-              <a href="/">
-                <Icons
-                  iconType="HeaderLogo"
-                  name="Marketplace"
-                  isWhite
-                  height="2.5rem"
-                  width="11.2rem"
-                  viewBox="0 0 240 60"
-                />
-              </a>
-            }
-            user={userMock}
-            stores={storesMock}
-            selectedStore={selectedStore}
-            setSelectedStore={setSelectedStore}
-            checkStoreIcon={true}
-            showStoreIcon={true}
-            isAuthenticated={true}
-            userStatus="ACTIVE"
-            isSimpleHeader={false}
-            inactiveOrNotAuthRedirection={() => {}}
-            onLogout={() => {}}
-            onLogin={() => {}}
-            profileIcon={<div />}
-            openProfileIcon={false}
-            setOpenProfileIcon={() => {}}
-            notifications={<div />}
-            isNotificationsIcon={true}
-            badgeNotification={false}
-          />
+        {/* Header con selector de repo */}
+        <div className={styles.header}>
+          <HeaderComponent />
         </div>
 
         {/* Contenedor flex para contenido debajo del header */}
         <div className={styles.mainContainer}>
-          {/* 
-            Drawer de Material-UI (position: fixed, z-index: 1200)
-            Se renderiza pero no ocupa espacio en el layout
-          */}
+          {/* SideMenu */}
           <SideMenu
+            key={sideMenuKey}
             dataMenu={dataMenu}
             showSideMenu
             routes={location.pathname}
             goTo={handleGoTo}
           />
 
-          {/* 
-            Espaciador invisible que ocupa el mismo ancho que el Drawer
-            Esto empuja el contenido principal hacia la derecha
-          */}
+          {/* Espaciador para el Drawer */}
           <div className={styles.drawerSpacer} />
 
           {/* Área principal de contenido */}
