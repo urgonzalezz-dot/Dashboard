@@ -27,7 +27,8 @@ export const useGithubLockfile = () => {
       const owner = repoConfig?.params?.owner;
       const repo = repoConfig?.params?.repo;
       const lockfilePath = repoConfig?.params?.lockfilePath;
-      const token = repoConfig?.params?.tokenEnvKey;
+      const token = process.env[`NX_${repoConfig?.params?.tokenEnvKey}`];
+      // otro caso: REACT_APP_${tokenKey}
 
       console.log(repoConfig);
       // Ruta de extracción del package-lock.json que queremos
