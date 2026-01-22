@@ -4,3 +4,4 @@ export * from './lib/components/UpdateCard/UpdateCard';
 export * from './lib/components/GenericCard/GenericCard';
 export * from './lib/context';
 export * from './lib/components/MfeContainer';
+export * from './lib/components/Spinner/Spinner';
