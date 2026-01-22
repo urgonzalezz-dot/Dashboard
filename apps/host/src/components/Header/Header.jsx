@@ -1,37 +1,94 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
+/**
+ * @fileoverview Header Component con selector de repositorio global
+ *
+ * Usa hooks individuales de Redux para mejor separación de responsabilidades.
+ */
+
+import React, { useCallback, useState, useEffect, memo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Header as LpHeader, Icons } from '@lp_front_account/lp-kit-dashboards';
+
 import './_header.scss';
 
-import StoreIcon from '@mui/icons-material/Store';
-import GridViewIcon from '@mui/icons-material/GridView';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import PersonIcon from '@mui/icons-material/Person';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Icons } from '@lp_front_account/lp-kit-dashboards';
+// Redux hooks
+import {
+  useSelectedRepoId,
+  useSelectedRepo,
+  useReposList,
+  useSetSelectedRepo,
+} from '@libs/redux';
 
-/* const Icons = (props) => (
-  <div
-    style={{
-      width: props.width,
-      height: props.height,
-      backgroundColor: 'white',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: '#833177',
-      fontWeight: 'bold',
-    }}
-  >
-    LOGO
-  </div>
-); */
+/**
+ * Usuario que vendría de Auth0/contexto, ahorita es simulado
+ */
+const userMock = {
+  name: 'Admin User',
+  email: 'admin@liverpool.com',
+};
 
-const Header = ({ isMobile = false, title = 'Dashboard de monitoreo' }) => {
+const HeaderComponent = ({ context }) => {
+  const navigate = useNavigate();
+
+  // Estado local para UI
+  const [openProfileIcon, setOpenProfileIcon] = useState(false);
+
+  // Hooks individuales de Redux
+  const selectedRepoId = useSelectedRepoId();
+  const selectedRepo = useSelectedRepo();
+  const repos = useReposList();
+  const setSelectedRepo = useSetSelectedRepo();
+
+  // Inicializar selección si no hay ninguna
+  useEffect(() => {
+    if (!selectedRepoId && repos.length > 0) {
+      setSelectedRepo(repos[0].id);
+    }
+  }, [selectedRepoId, repos, setSelectedRepo]);
+
+  /**
+   * Handler cuando cambia el repo seleccionado
+   * Tolerante a diferentes formatos de input del kit:
+   * - string (solo id)
+   * - objeto { id, name }
+   * - evento con target.value
+   */
+  const handleRepoChange = useCallback(
+    (value) => {
+      // Extraer id dependiendo del formato
+      const id =
+        typeof value === 'string' ? value : value?.id || value?.target?.value;
+
+      if (id) {
+        console.log('[Header] Repo changed:', id);
+        setSelectedRepo(id);
+      }
+    },
+    [setSelectedRepo]
+  );
+
+  /**
+   * Handler de logout (placeholder)
+   */
+  const handleLogout = useCallback(() => {
+    console.log('[Header] Logout clicked');
+    // Implementar lógica de logout
+  }, []);
+
+  /**
+   * Navegar a una ruta
+   */
+  const handleNavigate = useCallback(
+    (path) => {
+      navigate(path);
+    },
+    [navigate]
+  );
+
   return (
-    <header className="dashboard-header">
-      {/*  */}
-      <div className="dashboard-header__left">
-        <a href="#" className="dashboard-header__logo-link">
+    <LpHeader
+      title="Dashboard de monitoreo"
+      headerLogo={
+        <Link to="/" className="header-logo-link">
           <Icons
             iconType="HeaderLogo"
             name="Marketplace"
@@ -40,34 +97,49 @@ const Header = ({ isMobile = false, title = 'Dashboard de monitoreo' }) => {
             width="11.2rem"
             viewBox="0 0 240 60"
           />
-        </a>
-        <span className="dashboard-header__divider" />
-        <span className="dashboard-header__title">{title}</span>
-      </div>
-      {/* derecha */}
-      {!isMobile && (
-        <div className="dashboard-header__right">
-          <div className="dashboard-header__location">
-            <StoreIcon className="dashboard-header__icon" />
-            <span className="dashboard-header__location-text">
-              México, CDMX
-            </span>
-            <KeyboardArrowDownIcon className="dashboard-header__icon dashboard-header__icon--small" />
-          </div>
-          <span className="dashboard-header__divider dashboard-header__divider--right" />
-          <div className="dashboard-header__actions">
-            <GridViewIcon className="dashboard-header__icon" />
-            <NotificationsIcon className="dashboard-header__icon" />
-            <PersonIcon className="dashboard-header__icon" />
-          </div>
+        </Link>
+      }
+      user={userMock}
+      // Props de selección de repo (antes stores)
+      stores={repos}
+      selectedStore={selectedRepo}
+      setSelectedStore={handleRepoChange}
+      checkStoreIcon={true}
+      showStoreIcon={true}
+      // Auth
+      isAuthenticated={true}
+      userStatus="ACTIVE"
+      isSimpleHeader={false}
+      inactiveOrNotAuthRedirection={() => {}}
+      onLogout={handleLogout}
+      onLogin={() => {}}
+      // Profile
+      profileIcon={
+        <div className="header-profile-menu">
+          <button
+            className="header-profile-button"
+            onClick={() => {
+              setOpenProfileIcon(false);
+              handleNavigate('/settings');
+            }}
+          >
+            Configuración
+          </button>
+          <button className="header-profile-button" onClick={handleLogout}>
+            Cerrar sesión
+          </button>
         </div>
-      )}
-    </header>
+      }
+      openProfileIcon={openProfileIcon}
+      setOpenProfileIcon={setOpenProfileIcon}
+      // Notificaciones (deshabilitadas por ahora)
+      notifications={<div />}
+      isNotificationsIcon={false}
+      badgeNotification={false}
+    />
   );
 };
-Header.propTypes = {
-  isMobile: PropTypes.bool,
-  title: PropTypes.string,
-};
 
-export default Header;
+HeaderComponent.displayName = 'HeaderComponent';
+
+export default memo(HeaderComponent);
