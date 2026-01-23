@@ -34,31 +34,31 @@ export function generateTags({
 
   // 2. Breaking change (major gap >= 1)
   if (versionGap.status === 'ok' && versionGap.major >= 1) {
-    tags.push('breaking-change');
+    tags.push('breaking_change');
   }
 
   // 3. Transitive (NO es directa, o no se pudo determinar)
   if (isDirect === false) {
     tags.push('transitive');
   } else if (isDirect === null) {
-    tags.push('unknown-type'); // No se pudo determinar
+    tags.push('unknown_type'); // No se pudo determinar
   }
 
   // 4. EOL/Unmaintained (deprecated o muy viejo)
   if (isDeprecated) {
-    tags.push('eol-unmaintained');
+    tags.push('eol_unmaintained');
   } else if (ageInMonths > 24) {
-    tags.push('low-activity');
+    tags.push('low_activity');
   }
 
   // 5. Minor update (solo minor/patch disponible, no major)
   if (versionGap.status === 'ok' && versionGap.major === 0 && isOutdated) {
-    tags.push('minor-update');
+    tags.push('minor_update');
   }
 
   // 6. Up to date
   if (!isOutdated) {
-    tags.push('up-to-date');
+    tags.push('up_to_date');
   }
 
   // 7. Runtime (dependencias de producción)
@@ -68,7 +68,7 @@ export function generateTags({
 
   // 8. Non-semver (versiones no parseables)
   if (versionParseStatus !== 'ok') {
-    tags.push('non-semver');
+    tags.push('non_semver');
   }
 
   return tags;
