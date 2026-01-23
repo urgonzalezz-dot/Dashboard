@@ -14,67 +14,46 @@ const DependencyPriorityCard = ({ dependency, onViewDetails }) => {
     analysis,
   } = dependency;
 
-  const getRiskColor = (level) => {
-    switch (level) {
-      case 'critical':
-        return '#DC2626';
-      case 'high':
-        return '#EA580C';
-      case 'medium':
-        return '#F59E0B';
-      case 'low':
-        return '#10B981';
-      default:
-        return '#6B7280';
-    }
+  const risk_color_level = {
+    critical: '#DC2626',
+    high: '#EA580C',
+    medium: '#F59E0B',
+    low: '#10B981',
+  };
+
+  const getRiskColor = (level) => risk_color_level[level] ?? '#6B7280';
+
+  const tag_colors = {
+    security: { bg: '#FEE2E2', text: '#991B1B' },
+    breaking_change: { bg: '#FFEDD5', text: '#9A3412' },
+    eol_unmaintained: { bg: '#F3E8FF', text: '#6B21A8' },
+    runtime: { bg: '#DBEAFE', text: '#1E40AF' },
+    minor_update: { bg: '#D1FAE5', text: '#065F46' },
+    up_to_date: { bg: '#D1FAE5', text: '#065F46' },
+    transitive: { bg: '#F3F4F6', text: '#374151' },
+    non_semver: { bg: '#FEF3C7', text: '#92400E' },
+    unknown_type: { bg: '#F3F4F6', text: '#6B7280' },
+    low_activity: { bg: '#FEF3C7', text: '#92400E' },
   };
 
   const getTagColor = (tag) => {
-    switch (tag) {
-      case 'security':
-        return { bg: '#FEE2E2', text: '#991B1B' };
-      case 'breaking-change':
-        return { bg: '#FFEDD5', text: '#9A3412' };
-      case 'eol-unmaintained':
-        return { bg: '#F3E8FF', text: '#6B21A8' };
-      case 'runtime':
-        return { bg: '#DBEAFE', text: '#1E40AF' };
-      case 'minor-update':
-        return { bg: '#D1FAE5', text: '#065F46' };
-      case 'up-to-date':
-        return { bg: '#D1FAE5', text: '#065F46' };
-      case 'transitive':
-        return { bg: '#F3F4F6', text: '#374151' };
-      case 'non-semver':
-        return { bg: '#FEF3C7', text: '#92400E' };
-      case 'unknown-type':
-        return { bg: '#F3F4F6', text: '#6B7280' };
-      case 'low-activity':
-        return { bg: '#FEF3C7', text: '#92400E' };
-      default:
-        return { bg: '#F3F4F6', text: '#374151' };
-    }
+    return tag_colors[tag] ?? { bg: '#F3F4F6', text: '#374151' };
+  };
+
+  // CAMBIAR los valores que estaban como _
+
+  const actions_icons = {
+    UPDATE_SECURITY: 'U',
+    REPLACE: 'R',
+    PLAN_MIGRATION: 'P',
+    UPDATE_MAJOR: 'U',
+    UPDATE_SAFE: 'S',
+    MONITOR: 'M',
+    REVIEW_MANUAL: 'R',
   };
 
   const getActionIcon = (actionType) => {
-    switch (actionType) {
-      case 'UPDATE_SECURITY':
-        return 'U';
-      case 'REPLACE':
-        return 'R';
-      case 'PLAN_MIGRATION':
-        return 'P';
-      case 'UPDATE_MAJOR':
-        return 'U';
-      case 'UPDATE_SAFE':
-        return 'S';
-      case 'MONITOR':
-        return 'M';
-      case 'REVIEW_MANUAL':
-        return 'R';
-      default:
-        return '•';
-    }
+    return actions_icons[actionType] ?? '•';
   };
 
   return (
