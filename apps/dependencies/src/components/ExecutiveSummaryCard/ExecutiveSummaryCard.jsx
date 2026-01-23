@@ -4,20 +4,14 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import styles from './ExecutiveSummaryCard.module.scss';
 
 const ExecutiveSummaryCard = ({ riskDistribution, stats, metadata }) => {
-  const getRiskColor = (level) => {
-    switch (level) {
-      case 'critical':
-        return '#DC2626'; // red-600
-      case 'high':
-        return '#EA580C'; // orange-600
-      case 'medium':
-        return '#F59E0B'; // amber-500
-      case 'low':
-        return '#10B981'; // green-500
-      default:
-        return '#6B7280'; // gray-500
-    }
+  risk_colors = {
+    critical: '#DC2626',
+    high: '#EA580C',
+    medium: '#F59E0B',
+    low: '#10B981',
   };
+
+  const getRiskColor = (level) => risk_colors[level] ?? '#6B7280';
 
   return (
     <GenericCard title="Resumen " icon={<AssessmentIcon />}>
