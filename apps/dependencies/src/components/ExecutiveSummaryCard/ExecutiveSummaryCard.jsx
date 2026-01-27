@@ -4,7 +4,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import styles from './ExecutiveSummaryCard.module.scss';
 
 const ExecutiveSummaryCard = ({ riskDistribution, stats, metadata }) => {
-  risk_colors = {
+  const risk_colors = {
     critical: '#DC2626',
     high: '#EA580C',
     medium: '#F59E0B',
