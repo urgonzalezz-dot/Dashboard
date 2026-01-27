@@ -151,8 +151,8 @@ body {
   width: 100%;
 
   /* Scroll para el contenido de los MFEs */
-  /*  overflow-x: hidden;
-  overflow-y: auto; */
+  overflow-x: hidden;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch; /* Smooth scroll en iOS */
 
   /* Padding consistente para todos los MFEs */
