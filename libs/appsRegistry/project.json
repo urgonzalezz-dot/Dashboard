@@ -1,0 +1,9 @@
+{
+  "name": "appsRegistry",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/appsRegistry/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project appsRegistry --web",
+  "targets": {}
+}
