@@ -11,7 +11,7 @@ import {
   createSuccessResult,
   createErrorResult,
   EMPTY_DEPLOY_STATUS,
-} from '../types/models.js';
+} from '@libs/models';
 
 /**
  * Pre-procesa respuesta de Jenkins antes de extraer campos
