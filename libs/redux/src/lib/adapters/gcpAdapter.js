@@ -4,7 +4,7 @@
 
 import { extractFields, buildUrlFromTemplate } from './extractors.js';
 import { normalizeToDeployStatus, normalizeGcpState } from './normalizers.js';
-import { createSuccessResult, createErrorResult } from '../types/models.js';
+import { createSuccessResult, createErrorResult } from '@libs/models';
 
 /**
  * Pre-procesa respuesta de GCP antes de extraer campos

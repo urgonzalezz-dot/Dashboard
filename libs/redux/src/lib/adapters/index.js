@@ -11,7 +11,7 @@ import {
   DataSourceEnum,
   createSuccessResult,
   createErrorResult,
-} from '../types/models.js';
+} from '@libs/models';
 
 /**
  * Registry de adapters por source

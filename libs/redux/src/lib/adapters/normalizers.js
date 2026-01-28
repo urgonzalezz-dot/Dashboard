@@ -11,7 +11,7 @@ import {
   FAILED_STATE_VALUES,
   DEPLOYING_STATE_VALUES,
   EMPTY_DEPLOY_STATUS,
-} from '../types/models.js';
+} from '@libs/models';
 
 /**
  * Normalizar el valor de desplegado a boolean
