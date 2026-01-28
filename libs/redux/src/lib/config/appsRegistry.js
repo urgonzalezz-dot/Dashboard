@@ -6,11 +6,11 @@
  * - appsList: Array ordenado
  */
 
-import { DataSourceEnum } from '../types/models.js';
+import { DataSourceEnum } from '@libs/models';
 
 /**
  * Registro indexado por ID
- * @type {Object.<string, import('../types/models.js').RepoConfig>}
+ * @type {Object.<string, import('@libs/models').RepoConfig>}
  */
 
 export const appsById = {

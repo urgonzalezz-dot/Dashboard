@@ -119,4 +119,4 @@ export {
   DEPLOYING_STATE_VALUES,
   createSuccessResult,
   createErrorResult,
-} from './lib/types/models.js';
+} from '@libs/models';

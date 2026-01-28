@@ -6,13 +6,13 @@ import { appsById } from '../config/appsRegistry.js';
 
 /**
  * Registro indexado por ID
- * @type {Object.<string, import('../types/models.js').RepoConfig>}
+ * @type {Object.<string, import('@libs/models').RepoConfig>}
  */
 
 /**
  * Selector base: obtiene el sub-estado repoSelection
  * @param {Object} state - Estado global de Redux
- * @returns {import('../types/models.js').RepoSelectionState}
+ * @returns {import('@libs/models').RepoSelectionState}
  */
 export const selectRepoSelectionState = (state) => state.repoSelection;
 
@@ -37,7 +37,7 @@ export const selectSelectedRepoId = (state) =>
 /**
  * Selector: Estado de deployment
  * @param {Object} state
- * @returns {import('../types/models.js').DeployStatus|null}
+ * @returns {import('@libs/models').DeployStatus|null}
  */
 export const selectDeployStatus = (state) =>
   state.repoSelection?.deployStatus ?? null;
@@ -59,7 +59,7 @@ export const selectError = (state) => state.repoSelection?.error ?? null;
 /**
  * Selector derivado: Configuración completa del repo seleccionado
  * @param {Object} state
- * @returns {import('../types/models.js').RepoConfig|null}
+ * @returns {import('@libs/models').RepoConfig|null}
  */
 
 export const selectSelectedRepoConfig = (state) => {
@@ -71,7 +71,7 @@ export const selectSelectedRepoConfig = (state) => {
 /**
  * Selector derivado: Source del repo seleccionado
  * @param {Object} state
- * @returns {import('../types/models.js').DataSource|null}
+ * @returns {import('@libs/models').DataSource|null}
  */
 
 export const selectSelectedSource = (state) => {
@@ -113,7 +113,7 @@ export const selectIsDesplegado = (state) => {
 /**
  * Selector derivado: Estado de deployment
  * @param {Object} state
- * @returns {import('../types/models.js').DeployState|null}
+ * @returns {import('@libs/models').DeployState|null}
  */
 export const selectDeployState = (state) => {
   const status = selectDeployStatus(state);
