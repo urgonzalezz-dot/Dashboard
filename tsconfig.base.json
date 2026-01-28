@@ -22,6 +22,8 @@
       "@libs/hooks": ["libs/hooks/src/index.js"],
       "@libs/ui": ["libs/ui/src/index.js"],
       "@libs/utilities": ["libs/utilities/src/index.js"],
+      "@libs/models": ["libs/models/src/index.js"],
+      "@libs/appsRegistry": ["libs/appsRegistry/src/index.js"],
       "@libs/redux": ["libs/redux/src/index.js"]
     }
   },
